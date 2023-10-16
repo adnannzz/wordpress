@@ -1,0 +1,56 @@
+version: '3.3'
+
+services:
+
+  wordpress:
+    image: wordpress:latest
+    container_name: wp13219  
+    hostname: wordpress    
+    restart: unless-stopped
+    ports:
+      - "8101:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: useradmin
+      WORDPRESS_DB_PASSWORD: wpp2ssword1 
+      WORDPRESS_DB_NAME: wordpress_db
+    volumes:
+      - ./wordpress:/var/www/html       
+    networks:
+      - red_wp13219
+      
+  db:
+    image: mariadb:latest    
+    container_name: db_wp13219
+    hostname: db    
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: wpp2ssword1
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: useradmin
+      MYSQL_PASSWORD: wpp2ssword1 
+    volumes:
+      - ./db:/var/lib/mysql       
+    networks:
+      - red_wp13219     
+
+  phpmyadmin:
+    image: phpmyadmin:latest    
+    container_name: pma_wp13219
+    restart: unless-stopped 
+    ports:      
+      - "8081:80"              
+    depends_on:      
+      - db         
+    environment:
+      PMA_HOST: db:3306  
+      MYSQL_ROOT_PASSWORD: wpp2ssword1
+      PMA_USER: useradmin
+      PMA_PASSWORD: wpp2ssword1 
+    networks:
+      - red_wp13219
+
+networks:
+  red_wp13219:    
+  
+      
